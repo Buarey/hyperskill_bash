@@ -4,8 +4,8 @@ jobs:
   external-workflow:
     runs-on: ubuntu-latest
     steps:
-      - name: Action
-        uses: actions/checkout
+      - name: Checkout
+        uses: abystoma/external-workflow
         with:
          repository: abystoma/external-workflow
          ref: 3eb718710f20d7df6874acdc41e189a2ae4182f5
