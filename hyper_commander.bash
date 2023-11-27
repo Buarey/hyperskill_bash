@@ -72,15 +72,6 @@ dir_list() {
 	echo
 }
 
-#file_check() {
-#
-#	for item in "${arr[@]}"; do
-#		if [[ $1 = "$item" ]]; then
-#		 	zmienna="$item"		
-#		fi
-#	done	
-#}
-
 selector_check() {
 			arr=(*)
 			for x in "${arr[@]}"; do
@@ -149,7 +140,6 @@ do
 			done
 			full_menu
 			read input
-
 			;;	
 		"4")
 			echo "Not implemented!"
