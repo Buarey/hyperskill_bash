@@ -73,37 +73,40 @@ dir_list() {
 }
 
 selector_check() {
-			arr=(*)
-			for x in "${arr[@]}"; do
-					if [[ $selector == "$x" ]]; then
-			 			zmienna=$1
-					fi
-			done
+change_dir="up"
 
-			if [[ $selector == "$zmienna" ]]; then
-				
-			 			echo "Not implemented!"
-						dir_list
-						menu_three
-						echo 
-						read selector
-			elif [[ $selector == "up" ]]; then
-						echo "Not implemented!"
-						dir_list
-						menu_three
-						echo
-						read selector
-			else
-						echo "Invalid input!"
-						dir_list
-						menu_three
-						echo
-						read selector
-			fi
+arr=(*)
+	for x in "${arr[@]}"; do
+		if [[ $selector == "$x" ]]; then
+			zmienna=$x
+		fi
+	done
+
+if [[ "$selector" == "$zmienna" ]]; then
+	if [[ -f "$zmienna" ]]; then
+		echo "Not implemented!"
+	elif [[ -d "$zmienna" ]]; then
+		cd "$selector"
+	fi	
+	dir_list
+	menu_three
+	echo 
+	read selector
+elif [[ "$selector" == "$change_dir" ]]; then
+	cd ..
+	dir_list
+	menu_three
+	echo
+	read selector
+else
+	echo "Invalid input!"
+	dir_list
+	menu_three
+	echo
+	read selector
+	fi
 
 }
-
-
 
 #main 
 
