@@ -15,8 +15,7 @@ hello() {
 }
 
 draw_line() {
-
-	for (( i=0; i<29; i++ ))
+	for (( i=0; i<$1; i++ ))
 	do
 		echo -n -
 	done
@@ -38,16 +37,84 @@ white_space() {
 
 full_menu () {
 
-draw_line
+draw_line 29
 echo $line_begin $menu_name "$(white_space "$menu_name")"  $line_end
 echo $line_begin $option_zero "$(white_space "$option_zero")" $line_end 
 echo $line_begin $option_one "$(white_space "$option_one")" $line_end
 echo $line_begin $option_two "$(white_space "$option_two")" ${line_end}
 echo $line_begin $option_three "$(white_space "$option_three")"${line_end}
 echo $line_begin $option_four "$(white_space "$option_four")" $line_end
-draw_line
+draw_line 29
 
 }
+
+menu_three() {
+
+draw_line 50
+echo "| 0 Main menu | 'up' To parent | 'name' To select |"
+draw_line 50
+
+}
+
+dir_list() {
+	
+	echo
+	echo "The list of files and directories:"
+	
+	arr=(*)
+	for item in "${arr[@]}"; do
+  		if [[ -f "$item" ]]; then
+    		echo "F $item"
+ 		 elif [[ -d "$item" ]]; then
+    	echo "D $item"
+  		fi
+	done
+	echo
+}
+
+#file_check() {
+#
+#	for item in "${arr[@]}"; do
+#		if [[ $1 = "$item" ]]; then
+#		 	zmienna="$item"		
+#		fi
+#	done	
+#}
+
+selector_check() {
+			arr=(*)
+			for x in "${arr[@]}"; do
+					if [[ $selector == "$x" ]]; then
+			 			zmienna=$1
+					fi
+			done
+
+			if [[ $selector == "$zmienna" ]]; then
+				
+			 			echo "Not implemented!"
+						dir_list
+						menu_three
+						echo 
+						read selector
+			elif [[ $selector == "up" ]]; then
+						echo "Not implemented!"
+						dir_list
+						menu_three
+						echo
+						read selector
+			else
+						echo "Invalid input!"
+						dir_list
+						menu_three
+						echo
+						read selector
+			fi
+
+}
+
+
+
+#main 
 
 hello
 full_menu
@@ -58,7 +125,7 @@ do
 	case $input in
 
 		"0")
-			echo "Farewell!"
+			echo "Farewell!"#
 			echo 
 			;;
 			
@@ -72,7 +139,19 @@ do
 			full_menu
 			read input
 			;;
-		"3" | "4")
+		"3")
+			dir_list
+			menu_three			
+			read selector
+			while [ $selector != "0" ]
+			do
+				selector_check $selector
+			done
+			full_menu
+			read input
+
+			;;	
+		"4")
 			echo "Not implemented!"
 			echo
 			full_menu
@@ -86,4 +165,5 @@ do
 			;;
 	esac
 done
+
 echo "Farewell!"
