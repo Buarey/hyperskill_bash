@@ -56,8 +56,15 @@ draw_line 50
 
 }
 
+file_menu() {
+
+draw_line 68
+echo "| 0 Back | 1 Delete | 2 Rename | 3 Make writable | 4 Make read-only |"
+draw_line 68
+
+}
+
 dir_list() {
-	
 	echo
 	echo "The list of files and directories:"
 	
@@ -72,6 +79,44 @@ dir_list() {
 	echo
 }
 
+file_operations() {
+
+	dir_list
+	file_menu
+	read f_input 
+	
+	while [ $f_input != "0" ]
+	do
+	if [[ "$f_input" == "1" ]]; then
+		rm  $zmienna
+		echo "$zmienna has been deleted."
+		break
+	elif [[ "$f_input" == "2" ]]; then
+		echo "Enter the new file name:"
+		read new_name
+		mv $zmienna $new_name
+		echo "$zmienna has been renamed as $new_name"
+		break
+	
+	elif [[ "$f_input" == "3" ]]; then
+	
+		chmod a=rw $zmienna
+		echo "Permissions have been updated."
+		ls -l $zmienna
+		break
+	
+	elif [[ "$f_input" == "4" ]]; then
+		chmod o=r $zmienna
+		echo "Permissions have been updated."
+		ls -l $zmienna
+		break
+	else
+		file_menu 
+		read f_input
+	fi
+	done
+}
+
 selector_check() {
 change_dir="up"
 
@@ -84,7 +129,10 @@ arr=(*)
 
 if [[ "$selector" == "$zmienna" ]]; then
 	if [[ -f "$zmienna" ]]; then
-		echo "Not implemented!"
+	
+	#tutaj czesc kodu trzeba zrobić
+		file_operations
+	
 	elif [[ -d "$zmienna" ]]; then
 		cd "$selector"
 	fi	
@@ -119,10 +167,9 @@ do
 	case $input in
 
 		"0")
-			echo "Farewell!"#
+			echo "Farewell!"
 			echo 
-			;;
-			
+			;;			
 		"1")
 			uname -n -o		
 			full_menu
