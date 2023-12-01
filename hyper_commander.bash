@@ -156,6 +156,25 @@ else
 
 }
 
+exec_op() {
+	
+	echo "Enter an executable name:"
+	read exec_name
+	which_out=$(which "$exec_name")
+		
+	if [ -n "$which_out" ]; then
+		echo "Located in: $which_out"
+		echo
+		echo "Enter arguments: "
+		read args
+		$exec_name $args
+	else 
+		echo "The executable with that name does not exist!"
+	fi
+	
+
+}
+
 #main 
 
 hello
@@ -192,7 +211,10 @@ do
 			read input
 			;;	
 		"4")
-			echo "Not implemented!"
+		
+			#implementacja wyszukiwania exec—w
+			exec_op
+#			echo "Not implemented!"
 			echo
 			full_menu
 			read input
