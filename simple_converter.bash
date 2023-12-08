@@ -1,34 +1,113 @@
 #!/bin/bash
 
+#global variables
+file_name="definitions.txt"
+#
+
 converter () {
-echo "Enter a definition:"
-read string float
 
-re='^[a-z]+_to_[a-z]+ -?[0-9]+\.?[0-9]*?$'
-full_input="$string $float"
-#echo $full_input
+if [ $1 == "1" ]; then
 
-if [[ "$full_input" =~ $re ]]; then
-#	echo "The definition is correct!"
-	echo "Enter a value to convert:"
-	read conv_value
-	re2='^[-+]?[0-9]+\.?[0-9]*$'	
+#	def_valid
+		echo "Not implemented!"
+		menu
+		read input	
 
-while [[ ! "$conv_value" =~ $re2 ]]	
-	do
-		if [[ ! "$conv_value" =~ $re2 ]]; then
-			echo "Enter a float or integer value!"
-			read conv_value	
-		fi
-	done
-	
-	result=$(bc <<< "$float * $conv_value")
-	echo "Result: $result"
-
-else
-    echo "The definition is incorrect!"
+elif [ $1 == "2" ]; then 
+	def_valid
+	menu
+	read input
+elif [ $1 == "3" ]; then
+	del_def
+	menu
+	read input	
 fi
 
+}
+
+def_valid () {
+	
+	
+	
+	echo "Enter a definition:"
+	read string float
+
+	re='^[a-z]+_to_[a-z]+ -?[0-9]+\.?[0-9]*?$'
+	full_input="$string $float"
+
+	while [[ ! "$full_input" =~ $re ]]
+	
+	do
+
+	if [[ ! "$full_input" =~ $re ]]; then
+		
+		echo "The definition is incorrect!"
+		echo "Enter a definition:"
+		read string float
+		full_input="$string $float"
+
+	fi
+	
+	done
+	
+		add_def
+
+}
+
+add_def () {
+	
+	echo "$full_input" >> "$file_name"
+}
+
+del_def () {
+	file_weight=$(wc -c $file_name | cut -d " " -f 1)
+	line_number=$(wc -l $file_name | cut -d " " -f 1)
+	
+	
+		if [[ $file_weight == "0" ]]; then
+			echo "Please add a definition first!"
+		else
+		
+		echo "Type the line number to delete or '0' to return"
+
+
+		nl -w1 -s'. ' $file_name
+
+		read del_line
+		
+			while [[ $del_line != "0" ]]
+			do
+		
+			if [[ $del_line -gt $line_number ]] || [[ -z $del_line ]]; then
+				echo "Enter a valid line number!"
+				read del_line
+			else
+				sed -i "${del_line}d" "$file_name"
+				break
+			fi	
+			done
+		fi	
+}
+
+math () {
+
+	echo "Enter a value to convert:"
+		read conv_value
+		re2='^[-+]?[0-9]+\.?[0-9]*$'	
+
+		while [[ ! "$conv_value" =~ $re2 ]]	
+			do
+			if [[ ! "$conv_value" =~ $re2 ]]; then
+				echo "Enter a float or integer value!"
+				read conv_value	
+			fi
+		done
+	
+		result=$(bc <<< "$float * $conv_value")
+		echo "Result: $result"
+		
+		menu
+		read input
 }
 
 menu () {
@@ -42,6 +121,7 @@ menu () {
 }
 
 #main
+touch $file_name
 echo "Welcome to the Simple converter!"
 echo
 menu
@@ -54,12 +134,21 @@ while [[ $input != $zero || $input != $quit ]]
 	do 
 case $input in
 
-		"1" | "2" | "3")
-		echo "Not implemented"
-		menu
-		read input
+		"1")
+
+		converter $input
+
 		;;
+		"2") 
 		
+		converter $input
+		
+		;;
+		"3")
+		
+		converter $input
+		
+		;;
 		"0" | "quit")
 		echo "Goodbye!"
 		break
