@@ -1,4 +1,4 @@
-#! /bin/bash
+#!/bin/bash
 
 #global variables
 re='^[0-9]+$'
@@ -13,12 +13,13 @@ scnd_int=""
 
 read_int () {
 	echo "Enter an arithmetic operation:"
-	read $first_int $calc_type $scnd_int
+	read first_int calc_type scnd_int
+
 
 }
 
 integer_check () {
-if [[ ! $first_int =~ $re ]] || [[ ! $scnd_int =~ re ]] || [[ -z $first_int ]] || [[ -z $scnd_int ]]; then 
+if [[ ! $first_int =~ $re ]] || [[ ! $scnd_int =~ $re ]] || [[ -z $first_int ]] || [[ -z $scnd_int ]]; then 
 	echo "Operation check failed!"
 else 
 	echo "Operation check passed!"
@@ -33,5 +34,3 @@ fi
 
 read_int
 integer_check
-
-
