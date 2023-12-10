@@ -22,10 +22,15 @@ integer_check () {
 if [[ ! $first_int =~ $re ]] || [[ ! $scnd_int =~ $re ]] || [[ -z $first_int ]] || [[ -z $scnd_int ]]; then 
 	echo "Operation check failed!"
 else 
-	echo "Operation check passed!"
+#	echo "Operation check passed!"
+	math
 
 fi
-	
+}
+
+math () {
+	result=$(bc <<< "$first_int $calc_type $scnd_int")
+	echo $result
 }
 
 ##########
