@@ -10,10 +10,9 @@ echo "Enter a message:"
 read -r input
 
 
-if [[ "$input" =~ $re ]]; then
-    echo "This is a valid message!"
-else
+if [[ ! "$input" =~ $re ]]; then
     echo "This is not a valid message!"
+	exit
 fi
 
 }
@@ -43,8 +42,26 @@ if [[ "$letter" =~ $re3 ]] && [[ $key =~ $re2 ]]; then
 else
     echo "Invalid key or letter!"
 fi
+}
 
+caesar () {
+echo "Type 'e' to encrypt, 'd' to decrypt a message:"
+echo "Enter a command:"
+read cmd
 
+if [[ $cmd == "e" ]]; then
+	valid_msg
+	echo "Encrypted message:"
+	echo $input | tr "[A-Z]" "[D-ZA-C]"
+
+elif [[ $cmd == "d" ]]; then
+	valid_msg
+	echo "Decrypted message:"
+	echo $input | tr '[D-ZA-C]' '[A-Z]'
+
+else
+	echo "Invalid command!"
+fi
 
 }
 
@@ -52,4 +69,6 @@ fi
 
 #valid_msg
 
-ascii_conv
+#ascii_conv
+
+caesar
