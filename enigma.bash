@@ -3,6 +3,7 @@
 re='^[A-Z ]+$'
 re2='^[0-9]$'
 re3='^[A-Z]$'
+re4='^[[a-zA-Z.@]+$'
 
 #functions
 valid_msg () {
@@ -10,9 +11,17 @@ echo "Enter a message:"
 read -r input
 
 
-if [[ ! "$input" =~ $re ]]; then
+if [[  "$input" =~ $re ]]; then
+
+	touch $file_name
+	echo "The file was created successfully!"
+	echo $input >> $file_name
+
+else	
     echo "This is not a valid message!"
-	exit
+ #	break
+ #   menu
+ #   read mode
 fi
 
 }
@@ -27,7 +36,6 @@ read -r key
 
 if [[ "$letter" =~ $re3 ]] && [[ $key =~ $re2 ]]; then
     
-	
 	value=$(printf "%d\n" "'$letter")
 	encoded_letter=$(( $value + $key ))
 	
@@ -65,10 +73,85 @@ fi
 
 }
 
+menu () {
+echo "0. Exit"
+echo "1. Create a file"
+echo "2. Read a file"
+echo "3. Encrypt a file"
+echo "4. Decrypt a file"
+echo "Enter an option:"
+}
+
+create_file () {
+	echo "Enter the filename:"
+	read file_name
+
+	if [[ ! $file_name =~ $re4 ]]; then
+		echo "File name can contain letters and dots only!"
+
+	else
+		valid_msg
+		
+	fi	
+} 
+
+read_file () {
+	echo "Enter the filename:"
+	read file_name
+
+	if [[ ! -f $file_name ]]; then
+		echo "File not found!"
+
+	else
+		echo "File content:"
+		cat $file_name
+		
+	fi	
+
+
+
+}
+
 #main
 
-#valid_msg
+echo "Welcome to the Enigma!"
 
-#ascii_conv
+menu
+read mode
 
-caesar
+while [[ $mode != "0" ]]
+
+do
+
+case $mode in
+
+	1)
+	create_file
+	menu
+	read mode
+	;;
+	2)
+	read_file
+	menu
+	read mode
+	;;
+	3)
+	echo "Not implemented!"
+	menu
+	read mode
+	;;
+	4)
+	echo "Not implemented!"
+	menu
+	read mode
+	;;
+	*)
+	echo "Invalid option!"
+	menu
+	read mode
+	;;
+esac
+
+done
+
+echo "See you later!"
