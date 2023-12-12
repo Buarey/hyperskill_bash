@@ -53,19 +53,28 @@ fi
 }
 
 caesar () {
-echo "Type 'e' to encrypt, 'd' to decrypt a message:"
-echo "Enter a command:"
-read cmd
+#echo "Type 'e' to encrypt, 'd' to decrypt a message:"
+#echo "Enter a command:"
+#read cmd
+cmd=$mode
 
-if [[ $cmd == "e" ]]; then
-	valid_msg
-	echo "Encrypted message:"
-	echo $input | tr "[A-Z]" "[D-ZA-C]"
+if [[ $cmd == "3" ]]; then
+#	valid_msg
+#	echo "Encrypted message:"
+	message=$(cat $file_name)
+	echo $message | tr "[A-Z]" "[D-ZA-C]" >> $file_name.enc
+	rm $file_name
+	echo "Success"
 
-elif [[ $cmd == "d" ]]; then
-	valid_msg
-	echo "Decrypted message:"
-	echo $input | tr '[D-ZA-C]' '[A-Z]'
+elif [[ $cmd == "4" ]]; then
+	message=$(cat $file_name)
+#	echo "Decrypted message:"
+	new_file=$(echo $file_name | cut -d '.' -f 1-2)
+	echo $message | tr '[D-ZA-C]' '[A-Z]' >> $new_file
+	#echo $new_file
+	#echo $file_name
+	rm $file_name
+	echo "Success"
 
 else
 	echo "Invalid command!"
@@ -103,14 +112,19 @@ read_file () {
 		echo "File not found!"
 
 	else
-		echo "File content:"
-		cat $file_name
+		$1	
 		
 	fi	
-
-
-
 }
+
+content () {
+	echo "File content:"
+	cat $file_name
+}
+
+
+
+
 
 #main
 
@@ -131,17 +145,17 @@ case $mode in
 	read mode
 	;;
 	2)
-	read_file
+	read_file "content"
 	menu
 	read mode
 	;;
 	3)
-	echo "Not implemented!"
+	read_file "caesar"
 	menu
 	read mode
 	;;
 	4)
-	echo "Not implemented!"
+	read_file "caesar"
 	menu
 	read mode
 	;;
