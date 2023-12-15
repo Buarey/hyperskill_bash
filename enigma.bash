@@ -1,87 +1,15 @@
 #!/bin/bash
+
+#set -euo pipefail 
+
+
 #global variables
 re='^[A-Z ]+$'
-re2='^[0-9]$'
+#re2='^[0-9]$'
 re3='^[A-Z]$'
 re4='^[[a-zA-Z.@]+$'
 
 #functions
-valid_msg () {
-echo "Enter a message:"
-read -r input
-
-
-if [[  "$input" =~ $re ]]; then
-
-	touch $file_name
-	echo "The file was created successfully!"
-	echo $input >> $file_name
-
-else	
-    echo "This is not a valid message!"
- #	break
- #   menu
- #   read mode
-fi
-
-}
-
-ascii_conv () {
-
-echo "Enter an uppercase letter:"
-read -r letter
-echo "Enter a key:"
-read -r key
-
-
-if [[ "$letter" =~ $re3 ]] && [[ $key =~ $re2 ]]; then
-    
-	value=$(printf "%d\n" "'$letter")
-	encoded_letter=$(( $value + $key ))
-	
-	if [[ $encoded_letter -gt 90 ]]; then 
-		reverse=$(( $encoded_letter - 26 ))
-		char=$(printf "%b\n" "$(printf "\\%03o" "$reverse")")
-	else	
-		char=$(printf "%b\n" "$(printf "\\%03o" "$encoded_letter")")
-	fi
-	
-	echo "Encrypted letter: $char"
-else
-    echo "Invalid key or letter!"
-fi
-}
-
-caesar () {
-#echo "Type 'e' to encrypt, 'd' to decrypt a message:"
-#echo "Enter a command:"
-#read cmd
-cmd=$mode
-
-if [[ $cmd == "3" ]]; then
-#	valid_msg
-#	echo "Encrypted message:"
-	message=$(cat $file_name)
-	echo $message | tr "[A-Z]" "[D-ZA-C]" >> $file_name.enc
-	rm $file_name
-	echo "Success"
-
-elif [[ $cmd == "4" ]]; then
-	message=$(cat $file_name)
-#	echo "Decrypted message:"
-	new_file=$(echo $file_name | cut -d '.' -f 1-2)
-	echo $message | tr '[D-ZA-C]' '[A-Z]' >> $new_file
-	#echo $new_file
-	#echo $file_name
-	rm $file_name
-	echo "Success"
-
-else
-	echo "Invalid command!"
-fi
-
-}
-
 menu () {
 echo "0. Exit"
 echo "1. Create a file"
@@ -102,7 +30,23 @@ create_file () {
 		valid_msg
 		
 	fi	
-} 
+}
+
+valid_msg () {
+echo "Enter a message:"
+read -r input
+
+
+if [[  "$input" =~ $re ]]; then
+
+	touch $file_name
+	echo "The file was created successfully!"
+	echo $input >> $file_name
+
+else	
+    echo "This is not a valid message!"
+fi
+}
 
 read_file () {
 	echo "Enter the filename:"
@@ -110,10 +54,8 @@ read_file () {
 
 	if [[ ! -f $file_name ]]; then
 		echo "File not found!"
-
 	else
-		$1	
-		
+		$1			
 	fi	
 }
 
@@ -122,9 +64,60 @@ content () {
 	cat $file_name
 }
 
+caesar () {
+cmd=$mode
+
+if [[ $cmd == "3" ]]; then
+	message=$(cat $file_name)
+	echo $message | tr "[A-Z]" "[D-ZA-C]" >> $file_name.enc
+	rm $file_name
+	echo "Success"
+
+elif [[ $cmd == "4" ]]; then
+	message=$(cat $file_name)
+	new_file=$(echo $file_name | cut -d '.' -f 1-2)
+	echo $message | tr '[D-ZA-C]' '[A-Z]' >> $new_file
+	rm $file_name
+	echo "Success"
+
+else
+	echo "Invalid command!"
+fi
+}
+
+encypt () {
+
+echo "Enter password:"
+read password
+output_file=$file_name.enc
+openssl enc -aes-256-cbc -e -pbkdf2 -nosalt -in "$file_name" -out "$output_file" -pass pass:"$password" &>/dev/null
+exit_code=$?
+#echo $exit_code
+if [[ $exit_code -ne 0 ]]; then
+echo "Fail"
+else
+echo "Success"
+rm $file_name
+fi
 
 
+}
 
+decrypt () {
+
+echo "Enter password:"
+read password
+output_file=$(echo $file_name | cut -d '.' -f 1-2)
+openssl enc -aes-256-cbc -d -pbkdf2 -nosalt -in "$file_name" -out "$output_file" -pass pass:"$password" &>/dev/null
+exit_code=$?
+if [[ $exit_code -ne 0 ]]; then
+echo "Fail"
+else
+echo "Success"
+rm $file_name
+fi
+
+}
 
 #main
 
@@ -133,29 +126,28 @@ echo "Welcome to the Enigma!"
 menu
 read mode
 
-while [[ $mode != "0" ]]
-
+while [ $mode != "0" ]
 do
 
 case $mode in
 
-	1)
+	"1")
 	create_file
 	menu
 	read mode
 	;;
-	2)
+	"2")
 	read_file "content"
 	menu
 	read mode
 	;;
-	3)
-	read_file "caesar"
+	"3")
+	read_file "encypt"
 	menu
 	read mode
 	;;
-	4)
-	read_file "caesar"
+	"4")
+	read_file "decrypt"
 	menu
 	read mode
 	;;
@@ -165,7 +157,6 @@ case $mode in
 	read mode
 	;;
 esac
-
 done
 
 echo "See you later!"
