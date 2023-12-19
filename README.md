@@ -6,4 +6,4 @@ This is a simple bash scriptin repo created for a Hyperskill course
 2. Simple Converter - Finished
 3. Simple Calculator - Finished
 4. Enigma - Finished
-5. 
+5. True or False - Work in Progress
